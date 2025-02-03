@@ -6,7 +6,7 @@ export default async function Home() {
 
   try {
     bannerData = await fetch('http://localhost:3000/api/banner', {
-      cache: 'no-store',
+      next: { revalidate: 60 }, // ✅ 60초마다 데이터 갱신 (ISR)
     }).then((res) => res.json());
   } catch (error) {
     console.error('❌ Banner API fetch failed:', error);
