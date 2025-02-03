@@ -1,17 +1,30 @@
-import Banner from "./components/Banner";
-import Top10List from "./components/Top10List";
+import Banner from './components/Banner';
+import Top10List from './components/Top10List';
 
 export default async function Home() {
-  const bannerData = await fetch("http://localhost:3000/api/banner").then((res) =>
-    res.json()
-  );
+  let bannerData = null;
+
+  try {
+    bannerData = await fetch('http://localhost:3000/api/banner', {
+      cache: 'no-store',
+    }).then((res) => res.json());
+  } catch (error) {
+    console.error('❌ Banner API fetch failed:', error);
+  }
 
   return (
     <div>
-      {/* SSR Banner */}
-      <Banner bannerData={bannerData} />
-      <div className="px-8">
-        {/* CSR Top10List */}
+      {/* API 요청이 실패하면 기본 배너 데이터를 보여줌 */}
+      <Banner
+        bannerData={
+          bannerData || {
+            image: '',
+            title: '기본 배너',
+            description: '기본 설명',
+          }
+        }
+      />
+      <div className='px-8'>
         <Top10List />
       </div>
     </div>
